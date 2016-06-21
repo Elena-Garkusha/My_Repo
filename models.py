@@ -75,6 +75,9 @@ class Session(models.Model):
     def action_done(self):
         self.state = 'done'
 
+    attendees_count = fields.Integer(
+        string=" Attendees count", compute='_get_attendees_count', store=True)
+
     @api.depends('seats', 'attendee_ids')
     def _taken_seats(self):
         for r in self:
@@ -99,6 +102,12 @@ class Session(models.Model):
                     'message': "Increase seats or remove axcess attendees",
                 },
             }
+
+    @api.depends('attendee_ids')
+    def _get_attendees_count(self):
+        for r  in self:
+            r.attendees_count = len(r.attendee_ids)
+
     @api.constrains('instructor_id', 'attendee_ads')
     def _check_instructor_not_in_attendees(self):
         for r in self:

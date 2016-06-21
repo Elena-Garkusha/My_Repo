@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from openerp import fields, models
 
 class Partner(models.Model):
